@@ -1,0 +1,45 @@
+services:
+  server:
+    container_name: "test_server"
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    ports:
+      - "0.0.0.0:8888:8888/tcp"
+    depends_on:
+      - db
+    volumes:
+      - .:/app/
+
+  db:
+    container_name: "test_db"
+    build:
+      context: .
+      dockerfile: db.Dockerfile
+    networks:
+      - default
+    restart: always
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - "0.0.0.0:3306:3306/tcp"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "-ppass"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE
+    env_file:
+      - .env
+
+    # we mount a data volume to make sure we don't lose data
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+networks:
+  default:
+
+volumes:
+  mysql_data:
