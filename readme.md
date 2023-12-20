@@ -1,4 +1,4 @@
-此專案的 .env 檔案要自己創建，格式如下
+此專案的 .env 檔案要自己創建，並放在 Server\src\GoSocketServer 底下，格式如下
 
 ```
 MYSQL_ROOT_USER=
