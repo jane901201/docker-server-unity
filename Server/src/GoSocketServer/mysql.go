@@ -14,7 +14,6 @@ import (
 func CreateNewSqlUser(user User) {
 
 	dataSourceName := loadDataSourceName()
-
 	db, err := sql.Open("mysql", dataSourceName)
 
 	db.SetConnMaxLifetime(time.Minute * 3)
@@ -36,7 +35,6 @@ func UpdateSqlUser(user User) {
 	fmt.Println("Update sql user.")
 
 	dataSourceName := loadDataSourceName()
-
 	db, err := sql.Open("mysql", dataSourceName)
 
 	db.SetConnMaxLifetime(time.Minute * 3)
@@ -56,7 +54,6 @@ func SqlTest() {
 	fmt.Println("SqlTest")
 
 	dataSourceName := loadDataSourceName()
-
 	db, err := sql.Open("mysql", dataSourceName)
 
 	db.SetConnMaxLifetime(time.Minute * 3)
@@ -70,24 +67,6 @@ func SqlTest() {
 	checkErr(err)
 
 	db.Close()
-}
-
-func loadDataSourceName() string {
-
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println("Error loading .env file")
-	}
-
-	dbUser := os.Getenv("MYSQL_ROOT_USER")
-	dbPassword := os.Getenv("MYSQL_ROOT_PASSWORD")
-	dbHost := os.Getenv("MYSQL_HOST")
-	dbPort := os.Getenv("MYSQL_PORT")
-	dbName := os.Getenv("MYSQL_DATABASE")
-
-	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPassword, dbHost, dbPort, dbName)
-
-	return dataSourceName
 }
 
 func tryUpdateUserTable(db *sql.DB, user User) {
@@ -172,6 +151,24 @@ func dropTable(db *sql.DB) {
 
 	_, err = stmt.Exec()
 	checkErr(err)
+}
+
+func loadDataSourceName() string {
+
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file")
+	}
+
+	dbUser := os.Getenv("MYSQL_ROOT_USER")
+	dbPassword := os.Getenv("MYSQL_ROOT_PASSWORD")
+	dbHost := os.Getenv("MYSQL_HOST")
+	dbPort := os.Getenv("MYSQL_PORT")
+	dbName := os.Getenv("MYSQL_DATABASE")
+
+	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPassword, dbHost, dbPort, dbName)
+
+	return dataSourceName
 }
 
 func checkErr(err error) {
